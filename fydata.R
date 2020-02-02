@@ -1,3 +1,4 @@
+rm(list=ls()) # remove all existing objects in the environment
 library(jsonlite)
 json_file <- 'https://interface.sina.cn/news/wap/fymap2020_data.d.json'
 json_data <- fromJSON(json_file)
