@@ -7,23 +7,13 @@ data_flatten <- flatten(json_data$data$list)
 time <- json_data$data$mtime
 name <- data_flatten$name
 pop <- as.numeric(data_flatten$value)
-provdata <- data.frame(time = time, provname = name, provpop = pop)
+provdata <- data.frame(time = time, provname = name, provpop = pop,
+                       stringsAsFactors = FALSE)
 date <- as.Date(time)
 
 citylist <- c()
 surepop <- c()
 provname <- c()
-direct_city <- function(i){
-  city <- name[i]
-  connum <- pop[i]
-  prov <- name[i]
-  citylist <- c(citylist, city)
-  surepop <- c(surepop, connum)
-  provname <- c(provname, prov)
-  return(citylist, surepop, provname)
-}
-direct_city_list <- c(1,7,15,23,27,28,29) #z直辖市及港澳台地区
-direct_city(direct_city_list) 
 
 for (i in 1:34) {
   city <- data_flatten$city[[i]]$name
@@ -33,7 +23,8 @@ for (i in 1:34) {
   surepop <- c(surepop, connum)
   provname <- c(provname, prov)
 }
-citydata <- data.frame(time = time, provname = provname, city = citylist, citypop = as.numeric(surepop))
+citydata <- data.frame(time = time, provname = provname, city = citylist, citypop = as.numeric(surepop),
+                       stringsAsFactors = FALSE)
 
 write.csv(provdata, file = paste(date,'provdata.csv'))
 write.csv(citydata, file = paste(date,'citydata.csv'))
@@ -43,16 +34,38 @@ conn <- dbConnect(RSQLite::SQLite(), 'YiqingData.db')
 dbWriteTable(conn, paste(date,'provdata'), provdata)
 dbWriteTable(conn, paste(date,'citydata'), citydata)
 
+# combine direct city data to only city level
+citydata2 <- citydata
+directcity <- which(provname %in% c('北京', '上海', '天津', '重庆'))
+citydata2 <- citydata2[-c(directcity),]
+
+library(tibble)
+citydata2 <- add_row(citydata2, time = time, provname = '北京', city = '北京', citypop = provdata[1,3])
+citydata2 <- add_row(citydata2, time = time, provname = '上海', city = '上海', citypop = provdata[15,3])
+citydata2 <- add_row(citydata2, time = time, provname = '天津', city = '天津', citypop = provdata[23,3])
+citydata2 <- add_row(citydata2, time = time, provname = '重庆', city = '重庆', citypop = provdata[7,3])
+citydata2 <- add_row(citydata2, time = time, provname = '香港', city = '香港', citypop = provdata[29,3])
+citydata2 <- add_row(citydata2, time = time, provname = '澳门', city = '澳门', citypop = provdata[28,3])
+
+#create new dataset for mapping
+#province level
+provdatamap <- provdata
+provdatamap[2,3] <- 1000 #Change confirmed population of Hubei for better map looking
+#city level
+citydatamap <- citydata2
+citydatamap[1,4] <- 1000 #Change confirmed population of Wuhan to 1000
+citydatamap[2,4] <- 1000 #Change confirmed population of Huanggang to 1000
+
 library(leafletCN)
-geojsonMap(provdata, "china",
+geojsonMap(provdatamap, "china",
            namevar = ~provname, valuevar = ~provpop,
            popup =  paste0(provdata$provname, ":", provdata$provpop),
            palette = "Reds", legendTitle = "省级确诊人口")
 
-geojsonMap(citydata, "city",
+geojsonMap(citydata2, "city",
            namevar = ~city, valuevar = ~citypop,
-           popup =  paste0(citydata$city, ":", citydata$citypop),
-           na.color = "white", stroke = T,
+           na.color = 'white', 
+           popup =  paste0(citydata2$city, ":", citydata2$citypop),
            palette = "Reds", legendTitle = "确诊人口")
 
 ##daily data
@@ -90,6 +103,3 @@ ggplot(china_map_data,aes(x=long,y=lat,group=group), fill = ) +
   #geom_polygon(fill="white",colour="grey") +
   geom_polygon(colour="grey60") +
   coord_map("polyconic")
-
-#####
-
