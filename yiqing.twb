@@ -219,216 +219,6 @@
         <semantic-value key='[Country].[Name]' value='&quot;United States&quot;' />
       </semantic-values>
     </datasource>
-    <datasource caption='2020-02-04 provdata' inline='true' name='federated.174lcoo0ev5cep14pssxc07pm8sh' version='18.1'>
-      <connection class='federated'>
-        <named-connections>
-          <named-connection caption='2020-02-04 provdata' name='textscan.1hcvjh81e7p1fj1aw4zpp1avyc25'>
-            <connection class='textscan' directory='/Users/jonathan_jing/Library/Mobile Documents/com~apple~CloudDocs/Study/yiqing/China-Coronavirus' filename='2020-02-04 provdata.csv' password='' server='' workgroup-auth-mode='as-is' />
-          </named-connection>
-        </named-connections>
-        <relation connection='textscan.1hcvjh81e7p1fj1aw4zpp1avyc25' name='2020-02-04 provdata.csv' table='[2020-02-04 provdata#csv]' type='table'>
-          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
-            <column datatype='integer' name='F1' ordinal='0' />
-            <column datatype='datetime' name='time' ordinal='1' />
-            <column datatype='string' name='provname' ordinal='2' />
-            <column datatype='integer' name='provpop' ordinal='3' />
-            <column datatype='integer' name='deathpop' ordinal='4' />
-            <column datatype='integer' name='curepop' ordinal='5' />
-          </columns>
-        </relation>
-        <refresh increment-key='' incremental-updates='false' />
-        <metadata-records>
-          <metadata-record class='capability'>
-            <remote-name />
-            <remote-type>0</remote-type>
-            <parent-name>[2020-02-04 provdata.csv]</parent-name>
-            <remote-alias />
-            <aggregation>Count</aggregation>
-            <contains-null>true</contains-null>
-            <attributes>
-              <attribute datatype='string' name='character-set'>&quot;UTF-8&quot;</attribute>
-              <attribute datatype='string' name='collation'>&quot;en_US&quot;</attribute>
-              <attribute datatype='string' name='field-delimiter'>&quot;,&quot;</attribute>
-              <attribute datatype='string' name='header-row'>&quot;true&quot;</attribute>
-              <attribute datatype='string' name='locale'>&quot;en_US&quot;</attribute>
-              <attribute datatype='string' name='single-char'>&quot;&quot;</attribute>
-            </attributes>
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>F1</remote-name>
-            <remote-type>20</remote-type>
-            <local-name>[F1]</local-name>
-            <parent-name>[2020-02-04 provdata.csv]</parent-name>
-            <remote-alias>F1</remote-alias>
-            <ordinal>0</ordinal>
-            <local-type>integer</local-type>
-            <aggregation>Sum</aggregation>
-            <contains-null>true</contains-null>
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>time</remote-name>
-            <remote-type>135</remote-type>
-            <local-name>[time]</local-name>
-            <parent-name>[2020-02-04 provdata.csv]</parent-name>
-            <remote-alias>time</remote-alias>
-            <ordinal>1</ordinal>
-            <local-type>datetime</local-type>
-            <aggregation>Year</aggregation>
-            <contains-null>true</contains-null>
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>provname</remote-name>
-            <remote-type>129</remote-type>
-            <local-name>[provname]</local-name>
-            <parent-name>[2020-02-04 provdata.csv]</parent-name>
-            <remote-alias>provname</remote-alias>
-            <ordinal>2</ordinal>
-            <local-type>string</local-type>
-            <aggregation>Count</aggregation>
-            <scale>1</scale>
-            <width>1073741823</width>
-            <contains-null>true</contains-null>
-            <collation flag='0' name='LEN_RUS' />
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>provpop</remote-name>
-            <remote-type>20</remote-type>
-            <local-name>[provpop]</local-name>
-            <parent-name>[2020-02-04 provdata.csv]</parent-name>
-            <remote-alias>provpop</remote-alias>
-            <ordinal>3</ordinal>
-            <local-type>integer</local-type>
-            <aggregation>Sum</aggregation>
-            <contains-null>true</contains-null>
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>deathpop</remote-name>
-            <remote-type>20</remote-type>
-            <local-name>[deathpop]</local-name>
-            <parent-name>[2020-02-04 provdata.csv]</parent-name>
-            <remote-alias>deathpop</remote-alias>
-            <ordinal>4</ordinal>
-            <local-type>integer</local-type>
-            <aggregation>Sum</aggregation>
-            <contains-null>true</contains-null>
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>curepop</remote-name>
-            <remote-type>20</remote-type>
-            <local-name>[curepop]</local-name>
-            <parent-name>[2020-02-04 provdata.csv]</parent-name>
-            <remote-alias>curepop</remote-alias>
-            <ordinal>5</ordinal>
-            <local-type>integer</local-type>
-            <aggregation>Sum</aggregation>
-            <contains-null>true</contains-null>
-          </metadata-record>
-        </metadata-records>
-      </connection>
-      <aliases enabled='yes' />
-      <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
-        <calculation class='tableau' formula='1' />
-      </column>
-      <column caption='治愈人数' datatype='integer' name='[curepop]' role='measure' type='quantitative' />
-      <column caption='死亡人数' datatype='integer' name='[deathpop]' role='measure' type='quantitative' />
-      <column aggregation='None' caption='Provname' datatype='string' name='[provname]' role='dimension' semantic-role='[State].[Name]' type='nominal' />
-      <column caption='确诊人数' datatype='integer' name='[provpop]' role='measure' type='quantitative' />
-      <column caption='Time' datatype='datetime' name='[time]' role='dimension' type='ordinal' />
-      <extract count='-1' enabled='true' units='records'>
-        <connection access_mode='readonly' authentication='auth-none' author-locale='en_US' class='hyper' dbname='/Users/jonathan_jing/Documents/My Tableau Repository/Datasources/2020-02-04 provdata.hyper' default-settings='yes' schema='Extract' sslmode='' tablename='Extract' update-time='02/04/2020 01:52:58 AM' username='tableau_internal_user'>
-          <relation name='Extract' table='[Extract].[Extract]' type='table' />
-          <refresh increment-key='' incremental-updates='false'>
-            <refresh-event add-from-file-path='2020-02-04 provdata' increment-value='%null%' refresh-type='create' rows-inserted='34' timestamp-start='2020-02-04 01:52:58.552' />
-          </refresh>
-          <metadata-records>
-            <metadata-record class='column'>
-              <remote-name>F1</remote-name>
-              <remote-type>20</remote-type>
-              <local-name>[F1]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>F1</remote-alias>
-              <ordinal>0</ordinal>
-              <family>2020-02-04 provdata.csv</family>
-              <local-type>integer</local-type>
-              <aggregation>Sum</aggregation>
-              <approx-count>34</approx-count>
-              <contains-null>true</contains-null>
-            </metadata-record>
-            <metadata-record class='column'>
-              <remote-name>time</remote-name>
-              <remote-type>135</remote-type>
-              <local-name>[time]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>time</remote-alias>
-              <ordinal>1</ordinal>
-              <family>2020-02-04 provdata.csv</family>
-              <local-type>datetime</local-type>
-              <aggregation>Year</aggregation>
-              <approx-count>1</approx-count>
-              <contains-null>true</contains-null>
-            </metadata-record>
-            <metadata-record class='column'>
-              <remote-name>provname</remote-name>
-              <remote-type>129</remote-type>
-              <local-name>[provname]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>provname</remote-alias>
-              <ordinal>2</ordinal>
-              <family>2020-02-04 provdata.csv</family>
-              <local-type>string</local-type>
-              <aggregation>Count</aggregation>
-              <approx-count>34</approx-count>
-              <contains-null>true</contains-null>
-              <collation flag='0' name='LEN_RUS' />
-            </metadata-record>
-            <metadata-record class='column'>
-              <remote-name>provpop</remote-name>
-              <remote-type>20</remote-type>
-              <local-name>[provpop]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>provpop</remote-alias>
-              <ordinal>3</ordinal>
-              <family>2020-02-04 provdata.csv</family>
-              <local-type>integer</local-type>
-              <aggregation>Sum</aggregation>
-              <approx-count>32</approx-count>
-              <contains-null>true</contains-null>
-            </metadata-record>
-            <metadata-record class='column'>
-              <remote-name>deathpop</remote-name>
-              <remote-type>20</remote-type>
-              <local-name>[deathpop]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>deathpop</remote-alias>
-              <ordinal>4</ordinal>
-              <family>2020-02-04 provdata.csv</family>
-              <local-type>integer</local-type>
-              <aggregation>Sum</aggregation>
-              <approx-count>4</approx-count>
-              <contains-null>true</contains-null>
-            </metadata-record>
-            <metadata-record class='column'>
-              <remote-name>curepop</remote-name>
-              <remote-type>20</remote-type>
-              <local-name>[curepop]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>curepop</remote-alias>
-              <ordinal>5</ordinal>
-              <family>2020-02-04 provdata.csv</family>
-              <local-type>integer</local-type>
-              <aggregation>Sum</aggregation>
-              <approx-count>17</approx-count>
-              <contains-null>true</contains-null>
-            </metadata-record>
-          </metadata-records>
-        </connection>
-      </extract>
-      <layout dim-ordering='alphabetic' dim-percentage='0.431193' measure-ordering='alphabetic' measure-percentage='0.568807' show-structure='true' />
-      <semantic-values>
-        <semantic-value key='[Country].[Name]' value='&quot;China&quot;' />
-        <semantic-value key='[State].[Name]' value='%null%' />
-      </semantic-values>
-    </datasource>
     <datasource caption='2020-02-04 citydata' inline='true' name='federated.1nwackk02z5m8z1ahrcze03rdzyi' version='18.1'>
       <connection class='federated'>
         <named-connections>
@@ -696,6 +486,216 @@
         <semantic-value key='[State].[Name]' value='%null%' />
       </semantic-values>
     </datasource>
+    <datasource caption='2020-02-04 provdata' inline='true' name='federated.174lcoo0ev5cep14pssxc07pm8sh' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='2020-02-04 provdata' name='textscan.1hcvjh81e7p1fj1aw4zpp1avyc25'>
+            <connection class='textscan' directory='/Users/jonathan_jing/Library/Mobile Documents/com~apple~CloudDocs/Study/yiqing/China-Coronavirus' filename='2020-02-04 provdata.csv' password='' server='' workgroup-auth-mode='as-is' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.1hcvjh81e7p1fj1aw4zpp1avyc25' name='2020-02-04 provdata.csv' table='[2020-02-04 provdata#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='integer' name='F1' ordinal='0' />
+            <column datatype='datetime' name='time' ordinal='1' />
+            <column datatype='string' name='provname' ordinal='2' />
+            <column datatype='integer' name='provpop' ordinal='3' />
+            <column datatype='integer' name='deathpop' ordinal='4' />
+            <column datatype='integer' name='curepop' ordinal='5' />
+          </columns>
+        </relation>
+        <refresh increment-key='' incremental-updates='false' />
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[2020-02-04 provdata.csv]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='character-set'>&quot;UTF-8&quot;</attribute>
+              <attribute datatype='string' name='collation'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='field-delimiter'>&quot;,&quot;</attribute>
+              <attribute datatype='string' name='header-row'>&quot;true&quot;</attribute>
+              <attribute datatype='string' name='locale'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='single-char'>&quot;&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>F1</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[F1]</local-name>
+            <parent-name>[2020-02-04 provdata.csv]</parent-name>
+            <remote-alias>F1</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>time</remote-name>
+            <remote-type>135</remote-type>
+            <local-name>[time]</local-name>
+            <parent-name>[2020-02-04 provdata.csv]</parent-name>
+            <remote-alias>time</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>datetime</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>provname</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[provname]</local-name>
+            <parent-name>[2020-02-04 provdata.csv]</parent-name>
+            <remote-alias>provname</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>provpop</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[provpop]</local-name>
+            <parent-name>[2020-02-04 provdata.csv]</parent-name>
+            <remote-alias>provpop</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>deathpop</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[deathpop]</local-name>
+            <parent-name>[2020-02-04 provdata.csv]</parent-name>
+            <remote-alias>deathpop</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>curepop</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[curepop]</local-name>
+            <parent-name>[2020-02-04 provdata.csv]</parent-name>
+            <remote-alias>curepop</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
+        <calculation class='tableau' formula='1' />
+      </column>
+      <column caption='治愈人数' datatype='integer' name='[curepop]' role='measure' type='quantitative' />
+      <column caption='死亡人数' datatype='integer' name='[deathpop]' role='measure' type='quantitative' />
+      <column aggregation='None' caption='Provname' datatype='string' name='[provname]' role='dimension' semantic-role='[State].[Name]' type='nominal' />
+      <column caption='确诊人数' datatype='integer' name='[provpop]' role='measure' type='quantitative' />
+      <column caption='Time' datatype='datetime' name='[time]' role='dimension' type='ordinal' />
+      <extract count='-1' enabled='true' units='records'>
+        <connection access_mode='readonly' authentication='auth-none' author-locale='en_US' class='hyper' dbname='/Users/jonathan_jing/Documents/My Tableau Repository/Datasources/2020-02-04 provdata.hyper' default-settings='yes' schema='Extract' sslmode='' tablename='Extract' update-time='02/04/2020 01:52:58 AM' username='tableau_internal_user'>
+          <relation name='Extract' table='[Extract].[Extract]' type='table' />
+          <refresh increment-key='' incremental-updates='false'>
+            <refresh-event add-from-file-path='2020-02-04 provdata' increment-value='%null%' refresh-type='create' rows-inserted='34' timestamp-start='2020-02-04 01:52:58.552' />
+          </refresh>
+          <metadata-records>
+            <metadata-record class='column'>
+              <remote-name>F1</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[F1]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>F1</remote-alias>
+              <ordinal>0</ordinal>
+              <family>2020-02-04 provdata.csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>34</approx-count>
+              <contains-null>true</contains-null>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>time</remote-name>
+              <remote-type>135</remote-type>
+              <local-name>[time]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>time</remote-alias>
+              <ordinal>1</ordinal>
+              <family>2020-02-04 provdata.csv</family>
+              <local-type>datetime</local-type>
+              <aggregation>Year</aggregation>
+              <approx-count>1</approx-count>
+              <contains-null>true</contains-null>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>provname</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[provname]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>provname</remote-alias>
+              <ordinal>2</ordinal>
+              <family>2020-02-04 provdata.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>34</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RUS' />
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>provpop</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[provpop]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>provpop</remote-alias>
+              <ordinal>3</ordinal>
+              <family>2020-02-04 provdata.csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>32</approx-count>
+              <contains-null>true</contains-null>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>deathpop</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[deathpop]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>deathpop</remote-alias>
+              <ordinal>4</ordinal>
+              <family>2020-02-04 provdata.csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>4</approx-count>
+              <contains-null>true</contains-null>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>curepop</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[curepop]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>curepop</remote-alias>
+              <ordinal>5</ordinal>
+              <family>2020-02-04 provdata.csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>17</approx-count>
+              <contains-null>true</contains-null>
+            </metadata-record>
+          </metadata-records>
+        </connection>
+      </extract>
+      <layout dim-ordering='alphabetic' dim-percentage='0.431193' measure-ordering='alphabetic' measure-percentage='0.568807' show-structure='true' />
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;China&quot;' />
+        <semantic-value key='[State].[Name]' value='%null%' />
+      </semantic-values>
+    </datasource>
   </datasources>
   <mapsources>
     <mapsource name='Tableau' />
@@ -869,8 +869,8 @@
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='700' minheight='700' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='22' type='layout-basic' w='100000' x='0' y='0'>
-              <zone h='98000' id='21' param='vert' type='layout-flow' w='98400' x='800' y='1000' />
+            <zone h='100000' id='24' type='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98000' id='23' param='vert' type='layout-flow' w='98400' x='800' y='1000' />
               <zone-style>
                 <format attr='border-color' value='#000000' />
                 <format attr='border-style' value='none' />
@@ -920,8 +920,8 @@
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='700' minheight='700' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='29' type='layout-basic' w='100000' x='0' y='0'>
-              <zone h='97916' id='28' param='vert' type='layout-flow' w='98438' x='781' y='1042'>
+            <zone h='100000' id='31' type='layout-basic' w='100000' x='0' y='0'>
+              <zone h='97916' id='30' param='vert' type='layout-flow' w='98438' x='781' y='1042'>
                 <zone fixed-size='280' h='97916' id='3' is-fixed='true' name='Province' w='42285' x='781' y='1042'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -952,32 +952,6 @@
         </devicelayout>
       </devicelayouts>
       <simple-id uuid='{96479CEE-E4CA-46A2-865D-D413C13C2F6C}' />
-    </dashboard>
-    <dashboard name='Story 1' type='storyboard'>
-      <style />
-      <size maxheight='964' maxwidth='1016' minheight='964' minwidth='1016' />
-      <zones>
-        <zone h='100000' id='2' type='layout-basic' w='100000' x='0' y='0'>
-          <zone h='98340' id='1' param='vert' removable='false' type='layout-flow' w='98426' x='787' y='830'>
-            <zone h='3423' id='3' type='title' w='98426' x='787' y='830' />
-            <zone h='10477' id='4' is-fixed='true' paired-zone-id='5' removable='false' type='flipboard-nav' w='98426' x='787' y='4253' />
-            <zone h='84440' id='5' paired-zone-id='4' removable='false' type='flipboard' w='98426' x='787' y='14730'>
-              <flipboard active-id='1' nav-type='caption' show-nav-arrows='true'>
-                <story-points>
-                  <story-point captured-sheet='' id='1' />
-                </story-points>
-              </flipboard>
-            </zone>
-          </zone>
-          <zone-style>
-            <format attr='border-color' value='#000000' />
-            <format attr='border-style' value='none' />
-            <format attr='border-width' value='0' />
-            <format attr='margin' value='8' />
-          </zone-style>
-        </zone>
-      </zones>
-      <simple-id uuid='{75F96388-1DE6-4A42-A985-9EB8D7D3F35B}' />
     </dashboard>
   </dashboards>
   <windows source-height='72'>
@@ -1087,11 +1061,6 @@
       <viewpoints />
       <active id='-1' />
       <simple-id uuid='{B4F2C724-4465-4298-93AF-7A5FD3389EE0}' />
-    </window>
-    <window class='dashboard' name='Story 1'>
-      <viewpoints />
-      <active id='-1' />
-      <simple-id uuid='{F207CB4E-F8A4-42E1-A63D-EA6E8B20ED95}' />
     </window>
     <window class='dashboard' maximized='true' name='Province/City View'>
       <viewpoints>
