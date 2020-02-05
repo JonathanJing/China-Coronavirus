@@ -130,10 +130,10 @@ write.csv(historydata, file = 'historydata.csv')
 
 library(ggplot2)
 ggplot(historydata) + 
-  geom_line(aes(x = date, y = cn_conNum, color = 'yellow')) +
-  geom_line(aes(x = date, y = cn_deathNum, color = 'red')) +
-  geom_line(aes(x = date, y = cn_cureNum, color = 'green')) +
-  geom_line(aes(x = date, y = cn_susNum, color = 'blue'))
+  geom_line(aes(x = date, y = cn_conNum, color = 'Confirm')) +
+  geom_line(aes(x = date, y = cn_deathNum, color = 'Death')) +
+  geom_line(aes(x = date, y = cn_cureNum, color = 'Cure')) 
+  geom_line(aes(x = date, y = cn_susNum, color = 'Suspend'))
 
 ggplot(historydata, aes(x = date, y = cn_cureNum, color = "Yellow")) + 
   geom_point() +
@@ -184,7 +184,7 @@ seir_model = function (current_timepoint, state_values, parameters)
 }
 #Parameters
 contact_rate = 10                     # number of contacts per day
-transmission_probability = 0.025       # transmission probability
+transmission_probability = 0.02586       # transmission probability
 infectious_period = 14                 # infectious period
 latent_period = 2                     # latent period
 #Compute values of beta (tranmission rate) and gamma (recovery rate).
@@ -233,5 +233,74 @@ plot (I ~ time, data = output, type='b', ylim = c(0,1), col = 'red', ylab = '', 
 par (new = TRUE)  
 # recovered hosts over time
 plot (R ~ time, data = output, type='b', ylim = c(0,1), col = 'green', ylab = '', axes = FALSE)
+
+
+# Calulate suspect/confirm ratio in provence level
+sus_prov <- which(data_flatten$susNum != 0)
+s_c_ratio_prov <- as.numeric(data_flatten$susNum[sus_prov]) / as.numeric(data_flatten$value[sus_prov])
+mean(s_c_ratio_prov)
+
+sus_china <-  which(historydata$cn_susNum != 0)
+s_c_ratio_china <- historydata$cn_susNum[sus_china] / historydata$cn_conNum[sus_china]
+mean(s_c_ratio_china)
+
+#####Compute Reproduction Number R0
+### In country level, stat by date
+p <- 0.695
+tg_1 <- 8.4
+tg_2 <- 10
+
+yt <- historydata$cn_conNum + historydata$cn_susNum * p
+#the first confirmed patient start at 12/8, which t = 1
+as.Date('2019-12-08')
+#the historydate start at 1/11, which t = 34
+t <- difftime(as.Date('2020-01-11'), as.Date('2019-12-08'))
+t_start <- as.numeric(t)
+t_end <- t_start + nrow(historydata) - 1
+t <- c(t_end:t_start)
+lamda <- log(yt)/t
+  
+r0_1 <- 1 + lamda * tg_1 + p * (1 - p) * (lamda * tg_1)^2
+r0_2 <- 1 + lamda * tg_2 + p * (1 - p) * (lamda * tg_2)^2
+
+r0 <- data.frame(date = historydata$date, r0_low = r0_1, r0_high = r0_2)
+library(ggplot2)
+ggplot(r0) +
+  geom_line(aes(x = date, y = r0_low)) +
+  geom_line(aes(x = date, y = r0_high))
+
+#In provence level, using lateset date
+t <- difftime(as.Date(provdata$time[1]), as.Date('2019-12-08'))
+t <- as.numeric(t)
+yt <- provdata$provpop + mean(s_c_ratio_china) * provdata$provpop * p
+lamda <- log(yt)/t
+
+r0_prov_l <- 1 + lamda * tg_1 + p * (1 - p) * (lamda * tg_1)^2
+r0_prov_h <- 1 + lamda * tg_2 + p * (1 - p) * (lamda * tg_2)^2
+
+r0_prov <- data.frame(name = provdata$provname, r0_low = round(r0_prov_l,2), r0_high = round(r0_prov_h,2))
+
+library(leafletCN)
+geojsonMap(r0_prov, "china",
+           namevar = ~name, valuevar = ~r0_low,
+           popup =  paste0(r0_prov$name, ":", r0_prov$r0_low,'~', r0_prov$r0_high),
+           palette = "Reds", legendTitle = "省级R0")
+
+#In city level, using latest date
+t <- difftime(as.Date(citydata2$time[1]), as.Date('2019-12-08'))
+t <- as.numeric(t)
+yt <- citydata2$citypop + mean(s_c_ratio_china) * citydata2$citypop * p
+lamda <- log(yt)/t
+
+r0_city_l <- 1 + lamda * tg_1 + p * (1 - p) * (lamda * tg_1)^2
+r0_city_h <- 1 + lamda * tg_2 + p * (1 - p) * (lamda * tg_2)^2
+
+r0_city <- data.frame(name = citydata2$city, r0_low = round(r0_city_l,2), r0_high = round(r0_city_h,2))
+library(leafletCN)
+geojsonMap(r0_city, "city",
+           namevar = ~name, valuevar = ~r0_low,
+           na.color = 'white', 
+           popup =  paste0(r0_city$name, ":", r0_city$r0_low,'~', r0_city$r0_high),
+           palette = "Reds", legendTitle = "市级R0")
 
 
