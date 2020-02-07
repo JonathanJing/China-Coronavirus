@@ -65,6 +65,7 @@ library(RSQLite)
 conn <- dbConnect(RSQLite::SQLite(), 'YiqingData.db')
 dbWriteTable(conn, paste(date,'provdata'), provdata)
 dbWriteTable(conn, paste(date,'citydata'), citydata2)
+dbDisconnect(conn) 
 
 #create new dataset for mapping
 #province level
@@ -85,8 +86,8 @@ geojsonMap(provdatamap, "china",
            popup =  paste0(provdata$provname, ":", provdata$provpop),
            palette = "Reds", legendTitle = "省级确诊人数")
 
-geojsonMap(citydata3, "city",
-           namevar = ~city, valuevar = ~citypop,
+geojsonMap(citydata3, 'city',
+           namevar = citydata3$city, valuevar = citydata3$citypop,
            na.color = 'white', 
            popup =  paste0(citydata2$city, ":",'确诊人数:', citydata2$citypop, '死亡人数:', citydata2$deathpop, '治愈人数', citydata2$curepop),
            palette = "Reds", legendTitle = "log(确诊人数)")
@@ -95,7 +96,7 @@ geojsonMap(citydata3, "city",
 #ggmap method
 library(ggmap)
 library(Hmisc)
-register_google(key = "AIzaSyDoNZIMxOMz_jY1MP0WQKpx7gJqrhGxO1U")
+register_google(key = "")
 map <- get_map('Hubei')
 ggmap(map)
 
@@ -172,9 +173,33 @@ seir_model = function (current_timepoint, state_values, parameters)
     {
       # compute derivatives
       dS = (-beta * S * I)
-      dE = (beta * S * I) - (delta * E)
-      dI = (delta * E) - (gamma * I)
+      dE = (beta * S * I) - (sigma * E)
+      dI = (sigma * E) - (gamma * I)
       dR = (gamma * I)
+      
+      # combine results
+      results = c (dS, dE, dI, dR)
+      list (results)
+    }
+  )
+}
+
+seir_mobility_model = function (current_timepoint, state_values, parameters)
+{
+  # create state variables (local variables)
+  S = state_values [1]        # susceptibles
+  E = state_values [2]        # exposed
+  I = state_values [3]        # infectious
+  R = state_values [4]        # recovered
+  N = S + E + I + R
+  with ( 
+    as.list (parameters),     # variable names within parameters can be used 
+    {
+      # compute derivatives
+      dS = mu * (N - S) - (beta * S * I / N) - nu * S
+      dE = (beta * S * I / N) - ((mu + sigma) * E)
+      dI = (sigma * E) - ((mu + gamma) * I)
+      dR = (gamma * I) - mu * R + nu * S
       
       # combine results
       results = c (dS, dE, dI, dR)
@@ -188,13 +213,15 @@ transmission_probability = 0.02586       # transmission probability
 infectious_period = 14                 # infectious period
 latent_period = 2                     # latent period
 #Compute values of beta (tranmission rate) and gamma (recovery rate).
-beta_value = contact_rate * transmission_probability
-gamma_value = 1 / infectious_period
-delta_value = 1 / latent_period
+beta_value = contact_rate * transmission_probability #susceptible to exposed
+gamma_value = 1 / infectious_period #infectious to recovered
+sigma_value = 1 / latent_period #exposed to infectious
+mu_value = 0.01 #The natural mortality rate (this is unrelated to disease)
+nu_value = 0 #vaccination
 #Compute Ro - Reproductive number.
 Ro = beta_value / gamma_value
 #Disease dynamics parameters.
-parameter_list = c (beta = beta_value, gamma = gamma_value, delta = delta_value)
+parameter_list = c (beta = beta_value, gamma = gamma_value, sigma = sigma_value, mu = mu_value, nu = nu_value)
 #Initial values for sub-populations.
 #using 2/3 data of China
 W = mean(historydata$cn_susNum[1:7])       # susceptible hosts
@@ -208,7 +235,8 @@ initial_values = c (S = W/N, E = X/N, I = Y/N, R = Z/N)
 #Output timepoints.
 timepoints = seq (0, 50, by=1)
 #Simulate the SEIR epidemic.
-output = lsoda (initial_values, timepoints, seir_model, parameter_list)
+output = lsoda (initial_values, timepoints, seir_mobility_model, parameter_list)
+
 #Plot dynamics of Susceptibles sub-population.
 plot (S ~ time, data = output, type='b', col = 'blue')       
 #sub-population
@@ -255,19 +283,23 @@ yt <- historydata$cn_conNum + historydata$cn_susNum * p
 as.Date('2019-12-08')
 #the historydate start at 1/11, which t = 34
 t <- difftime(as.Date('2020-01-11'), as.Date('2019-12-08'))
-t_start <- as.numeric(t)
-t_end <- t_start + nrow(historydata) - 1
-t <- c(t_end:t_start)
+t_start <- as.numeric(t) +1
+t_end <- t_start + nrow(historydata) 
+t <- c(t_end:(t_start+1))
 lamda <- log(yt)/t
   
 r0_1 <- 1 + lamda * tg_1 + p * (1 - p) * (lamda * tg_1)^2
 r0_2 <- 1 + lamda * tg_2 + p * (1 - p) * (lamda * tg_2)^2
 
 r0 <- data.frame(date = historydata$date, r0_low = r0_1, r0_high = r0_2)
+write.csv(r0, file = paste(date,'_r0_china.csv'))
+
 library(ggplot2)
 ggplot(r0) +
+  ggtitle('基本传染数R0') + ylab('R0') + xlab('日期') +
   geom_line(aes(x = date, y = r0_low)) +
-  geom_line(aes(x = date, y = r0_high))
+  geom_line(aes(x = date, y = r0_high)) +
+  theme(text = element_text(family = 'Kai'))
 
 #In provence level, using lateset date
 t <- difftime(as.Date(provdata$time[1]), as.Date('2019-12-08'))
@@ -296,11 +328,11 @@ r0_city_l <- 1 + lamda * tg_1 + p * (1 - p) * (lamda * tg_1)^2
 r0_city_h <- 1 + lamda * tg_2 + p * (1 - p) * (lamda * tg_2)^2
 
 r0_city <- data.frame(name = citydata2$city, r0_low = round(r0_city_l,2), r0_high = round(r0_city_h,2))
+write.csv(r0_city, file = paste(date,'_r0_city_china.csv'))
 library(leafletCN)
 geojsonMap(r0_city, "city",
            namevar = ~name, valuevar = ~r0_low,
            na.color = 'white', 
            popup =  paste0(r0_city$name, ":", r0_city$r0_low,'~', r0_city$r0_high),
            palette = "Reds", legendTitle = "市级R0")
-
 
