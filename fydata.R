@@ -70,7 +70,7 @@ dbDisconnect(conn)
 #create new dataset for mapping
 #province level
 provdatamap <- provdata
-provdatamap[2,3] <- 1000 #Change confirmed population of Hubei for better map looking
+provdatamap[c(2:5),3] <- 1000 #Change confirmed population of Hubei for better map looking
 #city level
 citydatamap <- citydata2
 citydatamap[1,4] <- 1000 #Change confirmed population of Wuhan to 1000
@@ -160,29 +160,29 @@ summary(obj1)
 #https://rpubs.com/srijana/110753
 library (deSolve) 
 #Function to compute derivatives of the differential equations.
-seir_model = function (current_timepoint, state_values, parameters)
-{
-  # create state variables (local variables)
-  S = state_values [1]        # susceptibles
-  E = state_values [2]        # exposed
-  I = state_values [3]        # infectious
-  R = state_values [4]        # recovered
+#seir_model = function (current_timepoint, state_values, parameters)
+#{
+#  # create state variables (local variables)
+#  S = state_values [1]        # susceptibles
+#  E = state_values [2]        # exposed
+#  I = state_values [3]        # infectious
+#  R = state_values [4]        # recovered
   
-  with ( 
-    as.list (parameters),     # variable names within parameters can be used 
-    {
-      # compute derivatives
-      dS = (-beta * S * I)
-      dE = (beta * S * I) - (sigma * E)
-      dI = (sigma * E) - (gamma * I)
-      dR = (gamma * I)
-      
-      # combine results
-      results = c (dS, dE, dI, dR)
-      list (results)
-    }
-  )
-}
+#  with ( 
+#    as.list (parameters),     # variable names within parameters can be used 
+#    {
+#      # compute derivatives
+#      dS = (-beta * S * I)
+#      dE = (beta * S * I) - (sigma * E)
+#      dI = (sigma * E) - (gamma * I)
+#      dR = (gamma * I)
+#      
+#      # combine results
+#      results = c (dS, dE, dI, dR)
+#      list (results)
+#    }
+#  )
+#}
 
 seir_mobility_model = function (current_timepoint, state_values, parameters)
 {
