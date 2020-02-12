@@ -335,4 +335,24 @@ geojsonMap(r0_city, "city",
            na.color = 'white', 
            popup =  paste0(r0_city$name, ":", r0_city$r0_low,'~', r0_city$r0_high),
            palette = "Reds", legendTitle = "市级R0")
+####################
+#Multible linear regression
+dat <- read.csv('Citypop.csv', head=T, stringsAsFactors=F)
+dat1 <- dat[,-1]
+dat1 <- dat1[,-8]
+dat1$conpop <- as.numeric(dat1$conpop)
+dat1$deathpop <- as.numeric(dat1$deathpop)
+dat1$curepop <- as.numeric(dat1$curepop)
+dat1$totalpop <- as.numeric(dat1$totalpop)
+dat1 <- na.omit(dat1)
 
+set.seed(1)
+n.train <- floor( nrow(dat1)*.6 )
+id.train <- sample(1:nrow(dat1), n.train)
+id.test <- setdiff(1:nrow(dat1), id.train) 
+
+obj <- lm(conpop ~ totalpop, data = dat1[id.train, ])
+par(mfrow=c( 2, 2 ))
+plot(obj)
+
+summary(obj)
