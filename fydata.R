@@ -1,4 +1,5 @@
 rm(list=ls()) # remove all existing objects in the environment
+gc()
 setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Study/yiqing/China-Coronavirus")
 library(jsonlite)
 json_file <- 'https://interface.sina.cn/news/wap/fymap2020_data.d.json'
