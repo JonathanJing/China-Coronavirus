@@ -4,7 +4,7 @@
 
 数据来源 [新浪新闻](https://news.sina.cn/zt_d/yiqing0121), 每日更新。如需更多数据也可参考已有[数据仓库](https://github.com/BlankerL/DXY-COVID-19-Data)
 
-##数据库
+## 数据库
 
 数据保存在Dataset文件夹
 
