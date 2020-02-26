@@ -1,6 +1,6 @@
-#新型冠状病毒疫情数据爬虫，疫情省市地图，SEIR传染病模型和基本传染数R0预测
+# 新型冠状病毒疫情数据爬虫，疫情省市地图，SEIR传染病模型和基本传染数R0预测
 
-##爬虫
+## 爬虫
 
 数据来源 [新浪新闻](https://news.sina.cn/zt_d/yiqing0121), 每日更新。如需更多数据也可参考已有[数据仓库](https://github.com/BlankerL/DXY-COVID-19-Data)
 
